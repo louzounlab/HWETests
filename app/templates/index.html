@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/index.css">
+<style>
+    /* CSS for the different screen options */
+    .option1 { display: none; }
+    .option2 { display: none; }
+    .option3 { display: none; }
+
+    .highlight {
+        background-color: black;
+        font-weight: bold;
+    }
+
+    #matrixContainer {
+        display: flex;
+        justify-content: center; /* Horizontal alignment */
+        align-items: center; /* Vertical alignment */
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .glow-button {
+        background-color: #3498db; /* Default background color */
+        color: #ffffff; /* Default text color */
+        padding: 15px 20px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .glow-button:hover {
+        background-color: #2980b9; /* Hover background color */
+    }
+
+    .glow-button.selected {
+        background-color: #27ae60; /* Selected background color */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a box shadow when selected */
+    }
+</style>
+<script>
+    function createMatrix() {
+        // Get the user input for matrix size
+        var size = parseInt(document.getElementById('alleles').value);
+        if (size > 8) {
+            size = 8;
+        }
+        if (size < 1) {
+            size = 1;
+        }
+
+        // Get the container where the matrix will be displayed
+        const matrixContainer = document.getElementById('matrixContainer');
+
+        // Clear the existing matrix (if any)
+        matrixContainer.innerHTML = '';
+
+        // Create a new matrix based on the specified size
+        const matrix = document.createElement('table');
+
+        for (let i = 0; i < size; i++) {
+            const row = document.createElement('tr');
+
+            for (let j = 0; j < size; j++) {
+                const cell = document.createElement('td');
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.style = 'width: 100px; height: 40px;';
+
+                // Add the input field to the cell
+                cell.appendChild(input);
+                row.appendChild(cell);
+            }
+
+            // Add the row to the matrix
+            matrix.appendChild(row);
+        }
+
+        // Add the matrix to the container
+        matrixContainer.appendChild(matrix);
+    }
+    function showOption(option) {
+        // Hide all screen options
+        document.querySelectorAll('.option1, .option2, .option3').forEach(function (el) {
+            el.style.display = 'none';
+        });
+
+        // Show the selected screen option
+        document.querySelector('.' + option).style.display = 'block';
+    }
+    function submitForm() {
+        document.getElementById("file-form").submit()
+        document.getElementById("attached-file").value = '';
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="page-top">
+    <h1>HWETests</h1>
+</div>
+<div class="container text-center">
+    <br>
+    <button class="glow-button" onclick="showOption('option1'); selectButton(2);">umat</button>
+    <button class="glow-button" onclick="showOption('option2'); selectButton(3);">asta</button>
+    <button class="glow-button" onclick="showOption('option3'); selectButton(4);">umat with uncertainty</button>
+    <script>
+        function selectButton(buttonNumber) {
+            // Remove 'selected' class from all buttons
+            var buttons = document.querySelectorAll('.glow-button');
+            buttons.forEach(function(button) {
+                button.classList.remove('selected');
+            });
+
+            // Add 'selected' class to the clicked button
+            var selectedButton = document.querySelector('.glow-button:nth-child(' + buttonNumber + ')');
+            selectedButton.classList.add('selected');
+        }
+    </script>
+    <br>
+    <br>
+    <div class="option1">
+        <div class="container">
+            <div class="container text-center">
+                <form action="/impute-form" method="post" enctype="multipart/form-data">
+<!--                    <div class="row">-->
+<!--                        <div class="col"></div>-->
+<!--                        <div class="col-10">-->
+<!--                            <div class="row text-bg-secondary p-3" style="border: 3px solid white;">-->
+<!--                                <div class="col"></div>-->
+<!--                                <div class="col-4">-->
+<!--                                    <label for="observations" class="form-label badge text-bg-dark" style="font-size: 18px;">-->
+<!--                                        Insert Matrix Values:</label>-->
+<!--                                </div>-->
+<!--                                <div class="col"></div>-->
+<!--                                <div id="matrixContainer" class="container text-center"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col"></div>-->
+<!--                    </div>-->
+                    <br>
+                    <br>
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-4 text-bg-secondary p-3" style="border: 3px solid white;">
+                            <label for="observations" class="form-label badge text-bg-dark" style="font-size: 18px;">Append a matrix in a csv file:</label>
+                            <input type="file" name="observations" id="observations" class="form-control" accept=".csv" required>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="row">
+                        <div class="col"></div>
+                        <button class="col-3 btn btn-dark bottom-submit" type="submit" tabindex="17">Calculate</button>
+                        <div class="col"></div>
+                    </div>
+                </form>
+            </div>
+            <br>
+            <br>
+            <br>
+        </div>
+    </div>
+
+    <div class="option2">
+        <div class="container">
+            <form action="/impute-form-2" method="post" enctype="multipart/form-data">
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col-4 text-bg-secondary p-3" style="border: 3px solid white;">
+                        <label for="csv-file" class="form-label badge text-bg-dark" style="font-size: 18px;">Insert csv file</label>
+                        <input type="file" name="csv-file" id="csv-file" class="form-control" accept=".csv" required>
+                    </div>
+                    <div class="col"></div>
+                </div>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col"></div>
+                    <button class="col-3 btn btn-dark bottom-submit" type="submit" tabindex="17">Calculate</button>
+                    <div class="col"></div>
+                </div>
+                <br>
+                <br>
+                <br>
+            </form>
+        </div>
+    </div>
+
+    <div class="option3">
+        <div class="container">
+            <form action="/impute-form-3" method="post" enctype="multipart/form-data">
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col-4 text-bg-secondary p-3" style="border: 3px solid white;">
+                        <label for="csv-file" class="form-label badge text-bg-dark" style="font-size: 18px;">Insert csv file</label>
+                        <input type="file" name="csv-file" id="csv-file" class="form-control" accept=".csv" required>
+                    </div>
+                    <div class="col"></div>
+                </div>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col"></div>
+                    <button class="col-3 btn btn-dark bottom-submit" type="submit" tabindex="17">Calculate</button>
+                    <div class="col"></div>
+                </div>
+                <br>
+                <br>
+                <br>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

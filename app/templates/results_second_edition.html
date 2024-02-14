@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<script>
+    function submitForm() {
+        document.getElementById("threshold-form").submit()
+    }
+</script>
+
+{% endblock %}
+<br>
+{% block content %}
+<div class="page-top">
+    <div class="container">
+        <h1>Results Page</h1>
+    </div>
+</div>
+
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col text-bg-secondary p-3 text-center" style="border: 3px solid white;">
+            <label class="form-label badge text-bg-dark" style="font-size: 16px;">P value</label>
+            <br>
+            <a>{{ pval }}</a>
+        </div>
+        {% if (dof) %}
+        <div class="col text-bg-secondary p-3 text-center" style="border: 3px solid white;">
+            <label class="form-label badge text-bg-dark" style="font-size: 16px;">DOF</label>
+            <br>
+            <a>{{ dof }}</a>
+        </div>
+        {% endif %}
+        {% if (statistic) %}
+        <div class="col text-bg-secondary p-3 text-center" style="border: 3px solid white;">
+            <label class="form-label badge text-bg-dark" style="font-size: 16px;">STATISTIC</label>
+            <br>
+            <a>{{ statistic }}</a>
+        </div>
+        {% endif %}
+    </div>
+    <br>
+    <br>
+    <div class="row">
+        {% if csv_path %}
+        <div class="col-md-4 text-bg-secondary p-3 text-center" style="border: 3px solid white;">
+            <label for="csv_output" class="form-label badge text-bg-dark" style="font-size: 16px;">
+                Output csv file:</label>
+            <a href="{{ csv_path }}" id="csv_output" download="csv_output">Download file</a>
+        </div>
+        {% endif %}
+        {% if (plot_path) %}
+        <div class="col-md-8 text-bg-secondary p-3 text-center" style="border: 3px solid white;">
+            <a href="{{ plot_path }}" download><img src="{{ plot_path }}" alt="Outputted Plot"></a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<br>
+<br>
+{% endblock %}
