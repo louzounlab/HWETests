@@ -3,7 +3,6 @@ import secrets
 import os
 from flask import Flask, request, render_template
 import traceback
-import pandas as pd
 import threading
 import time
 from hwetests import asta, umat, umat_with_uncertainty
